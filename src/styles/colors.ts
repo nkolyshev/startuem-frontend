@@ -1,0 +1,6 @@
+export const Colors = {
+    background: '#CFE2F2',
+    light: '#ffffff',
+    accent: '#A0D1FF',
+    backgroundAccent: '#26292F',
+};

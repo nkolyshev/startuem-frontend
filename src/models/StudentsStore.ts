@@ -1,5 +1,5 @@
 import {makeAutoObservable} from "mobx";
-import {Course, Group, Subject} from "./StudentsStore.types";
+import {Course, Group, Student, Subject} from "./StudentsStore.types";
 
 export interface StudentsFormValues {
     course: string;
@@ -11,8 +11,13 @@ export interface IStudentsStore {
     courses: Course[] | null;
     groups: Group[] | null;
     subjects: Subject[] | null;
+    studentsFormValues: StudentsFormValues | null;
     fetchCourses(): Promise<void>
-    submitStudentsForm(values: StudentsFormValues): Promise<void>
+    setStudentsFormValues(values: StudentsFormValues): void;
+    fetchStudents(): Promise<void>;
+    deleteStudentById(id: string): Promise<void>;
+    addStudent(student: Student): Promise<void>;
+    clearStudents(): void;
 }
 
 export class StudentsStore implements IStudentsStore {
@@ -24,6 +29,8 @@ export class StudentsStore implements IStudentsStore {
     public courses: Course[] | null = null;
     public groups: Group[] | null = null;
     public subjects: Subject[] | null = null;
+    public students: Student[] | null = null;
+    public studentsFormValues: StudentsFormValues | null = null;
 
 
 
@@ -93,10 +100,52 @@ export class StudentsStore implements IStudentsStore {
         ];
     }
 
-    public async submitStudentsForm(values: StudentsFormValues): Promise<void> {
-        // TODO: сделать запрос на бэк
-        alert(JSON.stringify(values, null, 4));
+    setStudentsFormValues(values: StudentsFormValues): void {
+        this.studentsFormValues = values;
     }
 
+    public async fetchStudents(): Promise<void> {
+
+        //TODO: this.studentsFormValues использовать для запроса на бэк
+
+        this.students = [
+            {
+                id: 'id-1',
+                fullName: 'Тестов Тест Тестович',
+            },
+            {
+                id: 'id-2',
+                fullName: 'Попов Поп Попович',
+            },
+            {
+                id: 'id-3',
+                fullName: 'Миронов Мирон Миронович',
+            },
+            {
+                id: 'id-4',
+                fullName: 'Иванов Иван Иванович',
+            },
+            {
+                id: 'id-5',
+                fullName: 'Афонина Арина Витальевна',
+            },
+            {
+                id: 'id-6',
+                fullName: 'Коковихина Марина Леонидовна',
+            },
+        ]
+    }
+
+    public async deleteStudentById(studentId: string): Promise<void> {
+        this.students = this.students ? this.students?.filter(({id}) => id !== studentId) : null;
+    }
+
+    public async addStudent(student: Student): Promise<void> {
+        this.students = [...(this.students ?? []), student];
+    }
+
+    public clearStudents() {
+        this.students = null;
+    }
 
 }

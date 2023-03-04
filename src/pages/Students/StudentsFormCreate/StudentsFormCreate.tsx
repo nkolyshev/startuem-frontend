@@ -1,29 +1,22 @@
-import {Button, Form, Select} from "antd";
+import {Button, Divider, Form, Select} from "antd";
 import {useEffect, useMemo} from "react";
 import {observer} from "mobx-react-lite";
-import {useStore} from "./StudentsFormCreate.context";
-import {toJS} from "mobx";
+import {useStudentsStore} from "../Students.context";
 import {Course} from "../../../models/StudentsStore.types";
 import {StudentsFormValues} from "../../../models/StudentsStore";
 
 export const StudentsFormCreate = observer(() => {
 
-    const store = useStore();
+    const store = useStudentsStore();
 
     const onFinish = (values: StudentsFormValues) => {
-        store?.submitStudentsForm(values);
+        store?.setStudentsFormValues(values);
     }
 
     const [form] = Form.useForm();
 
     const course: Course = Form.useWatch('course', form);
     const group: Course = Form.useWatch('group', form);
-
-
-    useEffect(() => {
-        console.log('Курсы', toJS(store?.courses));
-        console.log('Группы', toJS(store?.groups));
-    }, [store?.courses, store?.groups]);
 
     useEffect(() => {
         store?.fetchCourses();
@@ -62,7 +55,7 @@ export const StudentsFormCreate = observer(() => {
                     }
                 ]}
             >
-                <Select options={store?.courses ?? []}/>
+                <Select options={store?.courses ?? []} size={'large'}/>
             </Form.Item>
             <Form.Item
                 label='Группа'
@@ -74,7 +67,7 @@ export const StudentsFormCreate = observer(() => {
                     }
                 ]}
             >
-                <Select options={store?.groups ?? []} disabled={isGroupsSelectDisabled}/>
+                <Select options={store?.groups ?? []} disabled={isGroupsSelectDisabled} size={'large'}/>
             </Form.Item>
             <Form.Item
                 label='Предмет'
@@ -86,11 +79,12 @@ export const StudentsFormCreate = observer(() => {
                     }
                 ]}
             >
-                <Select options={store?.subjects ?? []} disabled={isSubjectsSelectDisabled}/>
+                <Select options={store?.subjects ?? []} disabled={isSubjectsSelectDisabled} size={'large'}/>
             </Form.Item>
+            <Divider/>
             <Form.Item>
-                <Button type="primary" htmlType="submit">
-                    Submit
+                <Button type="primary" htmlType="submit" size={'large'}>
+                    Показать студентов
                 </Button>
             </Form.Item>
         </Form>

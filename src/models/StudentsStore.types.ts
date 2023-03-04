@@ -12,3 +12,8 @@ export interface Subject {
     id: string;
     value: string;
 }
+
+export interface Student {
+    id: string;
+    fullName: `${string} ${string} ${string}`;
+}

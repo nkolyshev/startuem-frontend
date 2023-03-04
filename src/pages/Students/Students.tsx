@@ -1,11 +1,22 @@
-import React from "react";
+import React, {useMemo} from "react";
 import {Wrapper} from "./Students-styled";
-import {StudentsFormCreateContainer} from "./StudentsFormCreate/StudentsFormCreateContainer";
+import {StudentsContainer} from "./StudentsContainer/StudentsContainer";
+import {StudentsStore} from "../../models/StudentsStore";
+import {observer} from "mobx-react-lite";
+import {StudentsStoreProvider} from "./Students.context";
 
-export const Students: React.FC = () => {
+
+export const Students: React.FC = observer(() => {
+
+    const store = useMemo<StudentsStore>(() => {
+        return new StudentsStore();
+    }, []);
+
     return (
-        <Wrapper>
-            <StudentsFormCreateContainer/>
-        </Wrapper>
+        <StudentsStoreProvider store={store}>
+            <Wrapper>
+                <StudentsContainer/>
+            </Wrapper>
+        </StudentsStoreProvider>
     )
-}
+});

@@ -1,5 +1,5 @@
 import React from "react";
-import {StudentsStore} from "../../../models/StudentsStore";
+import {StudentsStore} from "../../models/StudentsStore";
 
 const StudentsStoreContext = React.createContext<StudentsStore | null>(null);
 
@@ -14,4 +14,4 @@ export const StudentsStoreProvider: React.FC<StoreProviderProps> = ({ children, 
     );
 };
 
-export const useStore = () => React.useContext(StudentsStoreContext);
+export const useStudentsStore = () => React.useContext(StudentsStoreContext);

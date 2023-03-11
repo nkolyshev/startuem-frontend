@@ -1,23 +1,22 @@
-import React from 'react';
-import {RouterConfig} from "./routing/router-config";
-import {Header} from "./components/common/Header/Header";
-import { Footer } from './components/common/Footer/Footer';
+import React, {useMemo} from 'react';
 import {GlobalStyle} from "./App-styled";
 import 'antd/dist/reset.css';
+import {Root} from "./components/Root/Root";
+import {AuthStore} from "./models/AuthStore/AuthStore";
+import {AuthStoreProvider} from "./context/Auth.context";
 
-function App() { //app компонент. возвращает вёрстку.
-  return (
-    <>
-        <GlobalStyle/>
-        <div>
-            <Header/>
-            <main>
-                <RouterConfig/>
-            </main>
-            <Footer/>
-        </div>
-    </>
-  );
+function App() {
+
+    const authStore = useMemo<AuthStore>(() => {
+        return new AuthStore();
+    }, []);
+
+    return (
+        <AuthStoreProvider store={authStore}>
+            <GlobalStyle/>
+            <Root/>
+        </AuthStoreProvider>
+    );
 }
 
 export default App;

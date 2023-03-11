@@ -3,10 +3,13 @@ import {Wrapper, ContentWrapper, StyledTitle} from "./Home-styled";
 import {Button} from "antd";
 import {useNavigate} from "react-router-dom";
 import {PagePath} from "../../routing/page-path";
+import {useAuthStore} from "../../context/Auth.context";
+import {RoleNames} from "../../models/AuthStore/AuthStore.constants";
 
 export const Home: React.FC = () => {
 
     const navigate = useNavigate();
+    const authStore = useAuthStore();
 
     const handleOpenForm = useCallback(() => {
         navigate(PagePath.students);
@@ -19,7 +22,7 @@ export const Home: React.FC = () => {
                     Ваш журнал
                 </StyledTitle>
                 <StyledTitle level={2}>
-                    Здравствуйте, преподаватель!
+                    Здравствуйте, {authStore?.fio ? authStore.fio : authStore?.role ? RoleNames[authStore?.role].toLowerCase() : 'Пользователь'}!
                 </StyledTitle>
                 <Button size={'large'} type={'primary'} onClick={handleOpenForm}>
                     Новая форма

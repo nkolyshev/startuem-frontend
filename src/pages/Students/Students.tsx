@@ -1,7 +1,7 @@
 import React, {useMemo} from "react";
 import {Wrapper} from "./Students-styled";
 import {StudentsContainer} from "./StudentsContainer/StudentsContainer";
-import {StudentsStore} from "../../models/StudentsStore";
+import {StudentsStore} from "../../models/StudentsStore/StudentsStore";
 import {observer} from "mobx-react-lite";
 import {StudentsStoreProvider} from "./Students.context";
 

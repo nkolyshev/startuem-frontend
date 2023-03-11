@@ -3,5 +3,6 @@ export enum PageName {
     Profile = 'profile',
     Schedule = 'schedule',
     Students = 'students',
-
+    Login = 'login',
+    Forbidden = 'forbidden',
 }

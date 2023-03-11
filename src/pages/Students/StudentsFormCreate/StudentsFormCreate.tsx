@@ -1,48 +1,98 @@
 import {Button, Divider, Form, Select} from "antd";
-import {useEffect, useMemo} from "react";
+import {useCallback, useEffect, useMemo} from "react";
 import {observer} from "mobx-react-lite";
 import {useStudentsStore} from "../Students.context";
-import {Course} from "../../../models/StudentsStore.types";
-import {StudentsFormValues} from "../../../models/StudentsStore";
+import {StudentsFormValues} from "../../../models/StudentsStore/StudentsStore";
+import {useAuthStore} from "../../../context/Auth.context";
 
 export const StudentsFormCreate = observer(() => {
 
-    const store = useStudentsStore();
+    const studentsStore = useStudentsStore();
+    const authStore = useAuthStore();
 
-    const onFinish = (values: StudentsFormValues) => {
-        store?.setStudentsFormValues(values);
-    }
+
+    const onFinish = useCallback((values: StudentsFormValues) => {
+        studentsStore?.createLesson({
+            teacherUID: authStore?.uid ?? '',
+            groupId: values.group,
+            courseId: values.course,
+            subjectId: values.subject,
+        });
+    }, [authStore?.uid]);
 
     const [form] = Form.useForm();
 
-    const course: Course = Form.useWatch('course', form);
-    const group: Course = Form.useWatch('group', form);
+    const courseId: string = Form.useWatch('course', form);
+    const groupId: string = Form.useWatch('group', form);
 
     useEffect(() => {
-        store?.fetchCourses();
-    }, [store]);
-
-
-    useEffect(() => {
-        store?.fetchCourses();
-    }, [store]);
+        studentsStore?.fetchCourses();
+    }, [studentsStore]);
 
     const isGroupsSelectDisabled = useMemo(() => {
-        return !store?.courses || store?.courses?.length === 0 || !course;
-    }, [store?.courses, course]);
+        return !studentsStore?.courses || studentsStore?.courses?.length === 0 || !courseId;
+    }, [studentsStore?.courses, courseId]);
 
     const isSubjectsSelectDisabled = useMemo(() => {
-        return !store?.groups || store?.groups?.length === 0 || !group;
-    }, [store?.groups, group]);
+        return !studentsStore?.groups || studentsStore?.groups?.length === 0 || !courseId;
+    }, [studentsStore?.groups, courseId]);
 
     useEffect(() => {
-        if (!isGroupsSelectDisabled) store?.fetchGroups(course.id);
-    }, [store, isGroupsSelectDisabled, course]);
+        if (!isGroupsSelectDisabled) {
+            studentsStore?.fetchGroups(courseId);
+        }
+    }, [studentsStore, isGroupsSelectDisabled, courseId]);
 
     useEffect(() => {
-        if (!isSubjectsSelectDisabled) store?.fetchSubjects(group.id);
-    }, [store, group, isSubjectsSelectDisabled]);
+        if (!isSubjectsSelectDisabled) {
+            studentsStore?.fetchSubjects(groupId);
+        }
+    }, [studentsStore, groupId, isSubjectsSelectDisabled]);
 
+    const coursesSelectValues = useMemo(() => {
+        if (!studentsStore?.courses) return [];
+        return studentsStore?.courses?.map(course => {
+            return (
+                <Select.Option key={course.id} value={course.id}>
+                    {course.name}
+                </Select.Option>
+            );
+        })
+    }, [studentsStore?.courses]);
+
+    const groupsSelectValues = useMemo(() => {
+        if (!studentsStore?.groups) return [];
+        return studentsStore?.groups?.map(group => {
+            return (
+                <Select.Option key={group.id} value={group.id}>
+                    {group.name}
+                </Select.Option>
+            );
+        })
+    }, [studentsStore?.groups]);
+
+    const subjectsSelectValues = useMemo(() => {
+        if (!studentsStore?.subjects) return [];
+        return studentsStore?.subjects?.map(subject => {
+            return (
+                <Select.Option key={subject.id} value={subject.id}>
+                    {subject.name}
+                </Select.Option>
+            );
+        })
+    }, [studentsStore?.subjects]);
+
+    useEffect(() => {
+        if (courseId) {
+            form.resetFields(['group', 'subject']);
+        }
+    }, [courseId]);
+
+    useEffect(() => {
+        if (groupId) {
+            form.resetFields(['subject']);
+        }
+    }, [groupId]);
     return (
         <Form onFinish={onFinish} form={form}>
             <Form.Item
@@ -55,7 +105,9 @@ export const StudentsFormCreate = observer(() => {
                     }
                 ]}
             >
-                <Select options={store?.courses ?? []} size={'large'}/>
+                <Select size={'large'}>
+                    {coursesSelectValues}
+                </Select>
             </Form.Item>
             <Form.Item
                 label='Группа'
@@ -67,7 +119,9 @@ export const StudentsFormCreate = observer(() => {
                     }
                 ]}
             >
-                <Select options={store?.groups ?? []} disabled={isGroupsSelectDisabled} size={'large'}/>
+                <Select disabled={isGroupsSelectDisabled} size={'large'}>
+                    {groupsSelectValues}
+                </Select>
             </Form.Item>
             <Form.Item
                 label='Предмет'
@@ -79,7 +133,9 @@ export const StudentsFormCreate = observer(() => {
                     }
                 ]}
             >
-                <Select options={store?.subjects ?? []} disabled={isSubjectsSelectDisabled} size={'large'}/>
+                <Select disabled={isSubjectsSelectDisabled} size={'large'}>
+                    {subjectsSelectValues}
+                </Select>
             </Form.Item>
             <Divider/>
             <Form.Item>

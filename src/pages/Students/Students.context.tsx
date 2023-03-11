@@ -1,5 +1,5 @@
 import React from "react";
-import {StudentsStore} from "../../models/StudentsStore";
+import {StudentsStore} from "../../models/StudentsStore/StudentsStore";
 
 const StudentsStoreContext = React.createContext<StudentsStore | null>(null);
 

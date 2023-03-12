@@ -1,7 +1,7 @@
 export enum PageName {
     Home = 'home',
     Profile = 'profile',
-    Schedule = 'schedule',
+    Attendance = 'attendance',
     Students = 'students',
     Login = 'login',
     Forbidden = 'forbidden',

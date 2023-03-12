@@ -1,10 +1,11 @@
 import React, {useCallback} from "react";
-import {Wrapper, ContentWrapper, StyledTitle} from "./Home-styled";
+import {ContentWrapper, StyledTitle, Wrapper} from "./Home-styled";
 import {Button} from "antd";
 import {useNavigate} from "react-router-dom";
 import {PagePath} from "../../routing/page-path";
 import {useAuthStore} from "../../context/Auth.context";
 import {RoleNames} from "../../models/AuthStore/AuthStore.constants";
+import {RoleVariant} from "../../models/AuthStore/AuthStore.types";
 
 export const Home: React.FC = () => {
 
@@ -24,9 +25,13 @@ export const Home: React.FC = () => {
                 <StyledTitle level={2}>
                     Здравствуйте, {authStore?.fio ? authStore.fio : authStore?.role ? RoleNames[authStore?.role].toLowerCase() : 'Пользователь'}!
                 </StyledTitle>
-                <Button size={'large'} type={'primary'} onClick={handleOpenForm}>
-                    Новая форма
-                </Button>
+                {
+                    authStore?.role === RoleVariant.Teacher && (
+                        <Button size={'large'} type={'primary'} onClick={handleOpenForm}>
+                            Новая форма занятия
+                        </Button>
+                    )
+                }
             </ContentWrapper>
         </Wrapper>
     )

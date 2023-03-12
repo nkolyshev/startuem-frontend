@@ -1,3 +1,3 @@
 export const HEADER_HEIGHT = 80;
-export const FOOTER_HEIGHT = 70;
+export const FOOTER_HEIGHT = 50;
 export const WRAPPERS_HEIGHT = FOOTER_HEIGHT + HEADER_HEIGHT;

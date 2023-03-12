@@ -18,7 +18,11 @@ export const Header = observer(() => {
     return (
         <Wrapper>
             <Logo roleName={authStore?.role && RoleNames[authStore?.role]}/>
-            <Navigation/>
+            {
+                authStore?.isUserAuth && (
+                    <Navigation/>
+                )
+            }
             {
                 authStore?.isUserAuth && (
                     <StyledButtonExitWrapper onClick={handleLogoutUser}>

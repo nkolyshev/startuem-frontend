@@ -3,6 +3,7 @@ import {LoginPayload, RoleVariant} from "./AuthStore.types";
 import {AuthService} from "../../api/services/AuthService/AuthService";
 import {LoginResponse} from "../../api/services/AuthService/AuthService.types";
 import {LocalStorage} from "../../localStorage/LocalStorage";
+import {Course, Group} from "../StudentsStore/StudentsStore.types";
 
 export class AuthStore {
 
@@ -24,6 +25,9 @@ export class AuthStore {
     public uid: string | null = null;
     public role: RoleVariant | null = null;
     public fio: string | null = null;
+    public email: string | null = null;
+    public group: Group | null = null;
+    public course: Course | null = null;
     public accessToken: string | null;
     public error: string | null = null;
     private authService: AuthService | null = null;
@@ -31,10 +35,13 @@ export class AuthStore {
     loginUser = flow(function* (this: AuthStore, payload: LoginPayload){
         try {
             const result: LoginResponse = yield this?.authService?.login(payload);
-            const { user: { role, uid, fio }, accessToken } = result;
+            const { user: { role, uid, fio, email, group, course }, accessToken } = result;
             this.uid = uid;
             this.role = role;
             this.fio = fio;
+            this.email = email;
+            this.group = group;
+            this.course = course;
             this.isUserAuth = true;
             this.accessToken = accessToken;
         } catch (error) {
@@ -45,10 +52,13 @@ export class AuthStore {
     validateAccessToken = flow(function* (this: AuthStore){
         try {
             const result: LoginResponse = yield this?.authService?.validateToken();
-            const { user: { role, uid, fio }, accessToken } = result;
+            const { user: { role, uid, fio, email, group, course }, accessToken } = result;
             this.uid = uid;
             this.role = role;
             this.fio = fio;
+            this.email = email;
+            this.group = group;
+            this.course = course;
             this.isAccessTokenChecked = true;
             this.isUserAuth = true;
             this.accessToken = accessToken;
@@ -61,10 +71,13 @@ export class AuthStore {
     validateRefreshToken = flow(function* (this: AuthStore){
         try {
             const result: LoginResponse = yield this?.authService?.refreshToken();
-            const { user: { role, uid, fio }, accessToken } = result;
+            const { user: { role, uid, fio, email, group, course }, accessToken } = result;
             this.uid = uid;
             this.role = role;
             this.fio = fio;
+            this.email = email;
+            this.group = group;
+            this.course = course;
             this.isAccessTokenChecked = true;
             this.isRefreshTokenChecked = true;
             this.isUserAuth = true;
@@ -83,6 +96,8 @@ export class AuthStore {
         this.isUserAuth = false;
         this.uid = null;
         this.role = null;
+        this.fio = null;
+        this.email = null;
         this.isAccessTokenChecked = false;
         this.isRefreshTokenChecked = false;
     })

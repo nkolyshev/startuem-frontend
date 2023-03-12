@@ -8,7 +8,7 @@ export const Wrapper = styled.footer`
     height: ${FOOTER_HEIGHT}px;
     position: fixed;
     bottom: 0;
-    background-color: ${Colors.backgroundAccent};
+    background-color: rgba(38, 41, 47, 0.9);
     left: 0;
     right: 0;
     display: flex;

@@ -6,6 +6,8 @@ export const Wrapper = styled.header`
     background-color: ${Colors.backgroundAccent};
     min-height: ${HEADER_HEIGHT}px;
     position: sticky;
+    top: 0;
+    z-index: 10000000;
     width: 100%;
     display: grid;
     grid-template-areas: 'Logo Navigation UserRole ButtonExit';

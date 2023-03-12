@@ -9,4 +9,24 @@ export type CreateLessonPayload = {
     subjectId: string;
 };
 
+export type AddStudentToLessonPayload = {
+    studentUID: string;
+    lessonId: string;
+};
+
+export type RemoveStudentToLessonPayload = {
+    studentUID: string;
+    lessonId: string;
+};
+
+export type GetAllLessonsWithFiltersPayload = {
+    studentUID: string;
+    dateStart?: string;
+    dateEnd?: string;
+    subjectId?: string;
+};
+
 export type CreateLessonResponse = Lesson;
+export type  AddStudentToLessonResponse = Lesson;
+export type  RemoveStudentToLessonResponse = Lesson;
+export type  GetAllLessonsWithFiltersResponse = Lesson[];

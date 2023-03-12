@@ -1,9 +1,13 @@
 import {RoleVariant} from "../../../models/AuthStore/AuthStore.types";
+import {Course, Group} from "../../../models/StudentsStore/StudentsStore.types";
 
 export type UserInfo = {
     uid: string;
     role: RoleVariant;
     fio: string;
+    email: string;
+    course: Course;
+    group: Group;
 }
 
 export type LoginBody = {

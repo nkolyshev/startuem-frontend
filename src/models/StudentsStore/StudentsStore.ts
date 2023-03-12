@@ -1,5 +1,5 @@
-import {flow, makeAutoObservable} from "mobx";
-import {Course, Group, Lesson, Student, Subject} from "./StudentsStore.types";
+import {autorun, flow, makeAutoObservable} from "mobx";
+import {Course, Group, Lesson, Student, StudentFullInfo, StudentStatus, Subject} from "./StudentsStore.types";
 import {CoursesService} from "../../api/services/CoursesService/CoursesService";
 import {GroupsService} from "../../api/services/GroupsService/GroupsService";
 import {SubjectsService} from "../../api/services/SubjectsService/SubjectsService";
@@ -22,20 +22,32 @@ export class StudentsStore {
         this.subjectsService = new SubjectsService();
         this.usersService = new UsersService();
         this.lessonsService = new LessonsService();
+
+        autorun(() => {
+            if (this.studentsByGroup && this?.lesson?.students) {
+                this.students = this.studentsByGroup.map(student => {
+                    return {
+                        ...student,
+                        status: this?.lesson?.students?.find(lessonStudent => lessonStudent.uid === student.uid) ? StudentStatus.Active : StudentStatus.Inactive,
+                    }
+                }).sort((prevStudent, nextStudent) => {
+                    return prevStudent.status === StudentStatus.Inactive ? 1 : -1;
+                })
+            }
+        })
     }
 
     public courses: Course[] | null = null;
     public groups: Group[] | null = null;
     public subjects: Subject[] | null = null;
-    public students: Student[] | null = null;
+    public students: StudentFullInfo[] | null = null;
+    public studentsByGroup: Student[] | null = null;
     public lesson: Lesson | null = null;
     private coursesService: CoursesService;
     private groupsService: GroupsService;
     private subjectsService: SubjectsService;
     private usersService: UsersService;
     private lessonsService: LessonsService;
-
-
 
     fetchCourses = flow(function* (this: StudentsStore){
         this.courses = yield this.coursesService.getAllCourses();
@@ -58,21 +70,32 @@ export class StudentsStore {
     })
 
     fetchStudentsByGroup = flow(function* (this: StudentsStore, groupId: string){
-        this.students = yield this.usersService.getAllUsersByGroupId({
+        this.studentsByGroup = yield this.usersService.getAllUsersByGroupId({
             groupId,
         });
     })
 
-    public async deleteStudentById(studentId: string): Promise<void> {
-        this.students = this.students ? this.students?.filter(({uid}) => uid !== studentId) : null;
-    }
+    addStudentToLesson = flow(function* (this: StudentsStore, studentUID: string) {
+        this.lesson = yield this.lessonsService.addStudentToLesson({
+            lessonId: this?.lesson?.id ?? '',
+            studentUID,
+        });
+    })
 
-    public async addStudent(student: Student): Promise<void> {
-        this.students = [...(this.students ?? []), student];
-    }
+    deleteStudentById = flow(function* (this: StudentsStore, studentUID: string) {
+        this.lesson = yield this.lessonsService.removeStudentFromLesson({
+            lessonId: this?.lesson?.id ?? '',
+            studentUID,
+        });
+    })
 
     public clearStudents() {
         this.students = null;
+        this.studentsByGroup = null;
+        this.lesson = null;
+        this.groups = null;
+        this.subjects = null;
+        this.courses = null;
     }
 
 }

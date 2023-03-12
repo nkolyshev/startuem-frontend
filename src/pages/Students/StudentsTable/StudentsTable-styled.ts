@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import {Colors} from "../../../styles/colors";
+import Column from "antd/es/table/Column";
 
 export const FormWrapperContainer = styled.div`
     display: flex;
@@ -21,3 +22,8 @@ export const DescriptionWrapper = styled.div`
     padding: 10px;
     border-radius: 10px;
 `;
+
+
+export const StyledTableColumn = styled(Column)`
+    background-color: red !important;
+`

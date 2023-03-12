@@ -1,31 +1,35 @@
-import {Button, Card, Descriptions, Divider, Form, Input, Space, Table} from "antd"
+import {Badge, Button, Card, Descriptions, Divider, Form, Input, Space, Table} from "antd"
 import Column from "antd/es/table/Column";
 import {useStudentsStore} from "../Students.context";
-import {Student} from "../../../models/StudentsStore/StudentsStore.types";
+import {StudentFullInfo, StudentStatus} from "../../../models/StudentsStore/StudentsStore.types";
 import {useCallback, useEffect, useMemo} from "react";
-import {FormSubmitButtonWrapper, FormWrapper, FormWrapperContainer} from "./StudentsTable-styled";
 import {DeleteFilled, LeftOutlined, PlusCircleOutlined} from "@ant-design/icons";
 import {observer} from "mobx-react-lite";
 import {useEventsStore} from "../../../context/Events.context";
+import {FormSubmitButtonWrapper, FormWrapper, FormWrapperContainer } from "./StudentsTable-styled";
+import {useForm} from "antd/es/form/Form";
 
 export const StudentsTable = observer(() => {
 
     const studentsStore = useStudentsStore();
     const eventsStore = useEventsStore();
 
+    const [addStudentForm] = useForm();
+
     const handleDeleteStudentById = useCallback((id: string) => {
         studentsStore?.deleteStudentById(id);
     }, []);
 
-    const handleAddStudent = useCallback((student: Student) => {
-        studentsStore?.addStudent(student);
-    }, []);
+    const handleAddStudent = useCallback((student: StudentFullInfo) => {
+        studentsStore?.addStudentToLesson(student.uid);
+        addStudentForm.resetFields();
+    }, [studentsStore?.addStudentToLesson, addStudentForm]);
 
     const handleClearStudents = useCallback(() => {
         studentsStore?.clearStudents();
     }, [])
 
-    const studentsTableData: Array<Student & { key: string }> = useMemo(() => {
+    const studentsTableData: Array<StudentFullInfo & { key: string }> = useMemo(() => {
         return studentsStore?.students ? studentsStore?.students?.map(student => (
             {
                 ...student,
@@ -33,11 +37,6 @@ export const StudentsTable = observer(() => {
             }
         )) : [];
     }, [studentsStore?.students]);
-
-    useEffect(() => {
-        console.log('[studentsTableData]', studentsTableData);
-    }, [studentsTableData])
-
 
     useEffect(() => {
         studentsStore?.fetchStudentsByGroup(studentsStore?.lesson?.group?.id ?? '');
@@ -50,6 +49,7 @@ export const StudentsTable = observer(() => {
     useEffect(() => {
         eventsStore?.subscribeStudentUIDs((uid) => {
             console.warn('[UID]', uid);
+            studentsStore?.addStudentToLesson(uid);
         })
     }, [eventsStore?.subscribeStudentUIDs])
 
@@ -68,22 +68,35 @@ export const StudentsTable = observer(() => {
             </Card>
             <Divider/>
             <Table dataSource={studentsTableData} pagination={false}>
-                <Column title="UID" dataIndex="uid" key="uid"  />
+                <Column title="UID" dataIndex="uid" key="uid"   />
                 <Column title="ФИО" dataIndex="fio" key="fio" />
+                <Column
+                    key="status"
+                    align="right"
+                    render={(_, data: StudentFullInfo & { key: string }) => {
+                        const isActive = data?.status === StudentStatus.Active;
+                        return <Badge status={isActive ? 'success' : 'default'} text={isActive ? 'Присутствует' : 'Отсутствует'} />
+                    }}
+                />
                 <Column
                     key="action"
                     align="right"
-                    render={(_, data: Student & { key: string }) => (
-                        <Space size="small">
-                            <Button icon={<DeleteFilled/>} danger={true} type={'primary'} onClick={() => handleDeleteStudentById(data?.uid)}>Удалить студента</Button>
-                        </Space>
-                    )}
+                    render={(_, data: StudentFullInfo & { key: string }) => {
+                        if (data?.status === StudentStatus.Inactive) {
+                            return null;
+                        }
+                        return (
+                            <Space size="small">
+                                <Button icon={<DeleteFilled/>} danger={true} type={'primary'} onClick={() => handleDeleteStudentById(data?.uid)}>Удалить студента</Button>
+                            </Space>
+                        )
+                    }}
                 />
             </Table>
             <Divider/>
             <FormWrapperContainer>
                 <FormWrapper>
-                    <Form onFinish={handleAddStudent}>
+                    <Form onFinish={handleAddStudent} form={addStudentForm}>
                         <Form.Item
                             label='UID'
                             name='uid'
@@ -91,18 +104,6 @@ export const StudentsTable = observer(() => {
                                 {
                                     required: true,
                                     message: 'Введите ID студента!'
-                                }
-                            ]}
-                        >
-                            <Input size={'large'}/>
-                        </Form.Item>
-                        <Form.Item
-                            label='ФИО'
-                            name='fio'
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Введите ФИО студента!'
                                 }
                             ]}
                         >

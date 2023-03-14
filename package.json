@@ -51,6 +51,7 @@
       "last 1 safari version"
     ]
   },
+  "proxy": "https://startuem-backend.vercel.app",
   "devDependencies": {
     "@types/styled-components": "5.1.26"
   }

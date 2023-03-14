@@ -2,7 +2,7 @@ import {Manager, Socket} from 'socket.io-client';
 
 export class SocketApi {
 
-    private readonly baseUrl = 'http://127.0.0.1:5555/';
+    private readonly baseUrl = '/api/';
 
     private manager: Manager;
     socket: Socket;

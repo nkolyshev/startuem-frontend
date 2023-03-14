@@ -6,8 +6,6 @@ import {observer} from "mobx-react-lite";
 import {useAttendanceStore} from "../../../context/Attendance.context";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {useAuthStore} from "../../../context/Auth.context";
-import {toJS} from "mobx";
-import {Subject} from "../../../models/StudentsStore/StudentsStore.types";
 
 export const AttendanceTable = observer(() => {
 
@@ -25,7 +23,7 @@ export const AttendanceTable = observer(() => {
         if (value?.[1]) {
             dateEnd = value?.[1]?.toDate()?.toISOString();
         }
-        setDates([dateStart, dateEnd])
+        setDates([dateStart, dateEnd]);
     };
 
     const lessonsTableData: Array<{ key: string; subject: string; teacher: string; date: string }> = useMemo(() => {
@@ -65,7 +63,7 @@ export const AttendanceTable = observer(() => {
             ...(dates?.[1] ? {dateEnd: dates?.[1]} : {}),
             ...(selectedSubjectId ? {subjectId: selectedSubjectId} : {}),
         });
-    }, [dates, selectedSubjectId])
+    }, [dates, selectedSubjectId]);
 
     return (
         <Wrapper>

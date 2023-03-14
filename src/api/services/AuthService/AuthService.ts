@@ -1,10 +1,10 @@
 import {Api} from '../../Api';
 import {
-    LoginBody, LoginResponse, RefreshTokenResponse, RegisterBody, RegisterResponse,
-    ValidateTokenResponse
+    LoginBody, LoginResponse, RefreshTokenResponse, ValidateTokenResponse
 } from './AuthService.types';
 import {serviceMethodWithAuth} from '../../decorators/serviceMethodWithAuth';
 import {ServiceRequest} from '../../Api.types';
+import {EditUserPayload} from "../UsersService/UsersService.types";
 
 export class AuthService extends Api {
 
@@ -12,12 +12,6 @@ export class AuthService extends Api {
 
     async login(body: LoginBody): Promise<LoginResponse> {
         return this.create<LoginResponse>(this.getServiceEndpoint(this.serviceUrl, 'login'), {
-            body: body,
-        })
-    }
-
-    async register(body: RegisterBody): Promise<RegisterResponse> {
-        return this.create<RegisterResponse>(this.getServiceEndpoint(this.serviceUrl, 'register'), {
             body: body,
         })
     }
@@ -38,6 +32,14 @@ export class AuthService extends Api {
     async logout(params?: ServiceRequest): Promise<void> {
         return this.read<void>(this.getServiceEndpoint(this.serviceUrl, 'logout'), {
             headers: params?.headers,
+        })
+    }
+
+    @serviceMethodWithAuth
+    async register({ headers,  ...body }: ServiceRequest & EditUserPayload ): Promise<void> {
+        return this.create(this.getServiceEndpoint(this.serviceUrl, 'register'), {
+            headers,
+            body,
         })
     }
 

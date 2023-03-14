@@ -7,4 +7,5 @@ export const PagePath: Record<PageName, string> = {
     [PageName.Attendance]: '/attendance',
     [PageName.Login]: '/login',
     [PageName.Forbidden]: '/forbidden',
+    [PageName.UserManagement]: '/userManagement',
 }

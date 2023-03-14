@@ -5,4 +5,5 @@ export enum PageName {
     Students = 'students',
     Login = 'login',
     Forbidden = 'forbidden',
+    UserManagement = 'userManagement',
 }

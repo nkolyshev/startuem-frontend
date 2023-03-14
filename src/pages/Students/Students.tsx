@@ -1,9 +1,9 @@
 import React, {useMemo} from "react";
-import {Wrapper} from "./Students-styled";
 import {StudentsContainer} from "./StudentsContainer/StudentsContainer";
 import {StudentsStore} from "../../models/StudentsStore/StudentsStore";
 import {observer} from "mobx-react-lite";
 import {StudentsStoreProvider} from "./Students.context";
+import {FormWrapper} from "../../components/common/common-styled";
 
 
 export const Students: React.FC = observer(() => {
@@ -14,9 +14,9 @@ export const Students: React.FC = observer(() => {
 
     return (
         <StudentsStoreProvider store={store}>
-            <Wrapper>
+            <FormWrapper>
                 <StudentsContainer/>
-            </Wrapper>
+            </FormWrapper>
         </StudentsStoreProvider>
     )
 });

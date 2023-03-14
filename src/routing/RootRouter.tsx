@@ -10,6 +10,7 @@ import {Forbidden} from "../pages/Forbidden/Forbidden";
 import {useAuthStore} from "../context/Auth.context";
 import {RoleVariant} from "../models/AuthStore/AuthStore.types";
 import {Attendance} from "../pages/Attendance/Attendance";
+import {UserManagement} from "../pages/UserManagement/UserManagement";
 
 export const RootRouter: React.FC = () => {
 
@@ -33,6 +34,11 @@ export const RootRouter: React.FC = () => {
                 [RoleVariant.Student].includes(authStore?.role as RoleVariant)
                     ? <Route path={PagePath.attendance} index element={<Attendance/>}/>
                     : <Route path={PagePath.attendance} index element={<Forbidden/>}/>
+            }
+            {
+                [RoleVariant.Admin, RoleVariant.SuperAdmin].includes(authStore?.role as RoleVariant)
+                    ? <Route path={PagePath.userManagement} index element={<UserManagement/>}/>
+                    : <Route path={PagePath.userManagement} index element={<Forbidden/>}/>
             }
         </Routes>
     )

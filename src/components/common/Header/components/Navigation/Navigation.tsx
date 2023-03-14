@@ -17,6 +17,11 @@ export const Navigation = () => {
                     <PageLink pageName={PageName.Attendance} title={'Посещаемость'}/>
                 )
             }
+            {
+                (role === RoleVariant.Admin || role === RoleVariant.SuperAdmin) && (
+                    <PageLink pageName={PageName.UserManagement} title={'Управление пользователем'}/>
+                )
+            }
             <PageLink pageName={PageName.Profile} title={'Профиль'}/>
         </Wrapper>
     );

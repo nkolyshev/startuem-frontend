@@ -20,11 +20,7 @@ export type LoginResponse = {
     user: UserInfo;
 }
 
-export type RegisterBody = {
-    email: string;
-    password: string;
-    name: string;
-}
+
 export type RegisterResponse = {
     accessToken: string;
     user: UserInfo;

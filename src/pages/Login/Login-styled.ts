@@ -2,6 +2,8 @@ import styled from "styled-components";
 import {WRAPPERS_HEIGHT} from "../../constants/global.constants";
 import FormItem from "antd/es/form/FormItem";
 import {Divider, Form} from "antd";
+import {screenSize} from "../../constants/screen-size";
+import {screenNavigation} from "../../constants/screen-navigation";
 
 export const StyledWrapper = styled.div`
     display: flex;
@@ -20,6 +22,14 @@ export const StyledContent = styled.div`
     flex-direction: column;
     align-items: center;
     min-width: 400px;
+  
+    ${screenNavigation.mobile} {
+      border-radius: 0;
+      box-shadow: none;
+      background: none;
+      min-width: 0;
+      width: 100%;
+    }
 `
 export const FormStyled = styled(Form)`
     width: 100%;

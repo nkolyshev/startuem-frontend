@@ -8,7 +8,7 @@ export class EventsStore {
 
     public eventsService = new EventsService();
 
-    connectCardListener = flow(function* (this: EventsStore, cardListenerId: string = '001') {
+    connectCardListener = flow(function* (this: EventsStore, cardListenerId: string) {
         yield this.eventsService.cardListenerJoin(cardListenerId);
     });
 

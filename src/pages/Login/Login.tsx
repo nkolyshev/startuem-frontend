@@ -1,9 +1,9 @@
 import {LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
-import {Button, Input, Typography} from "antd";
+import {Button, Input, message, Typography} from "antd";
 import {
     FormStyled,
     StyledContent,
-    StyledDivider,
+    StyledDivider, StyledErrorWrapper,
     StyledFormContent,
     StyledFormItem, StyledFormSubmitButton,
     StyledTitleWrapper,
@@ -23,7 +23,6 @@ export const Login = observer(() => {
 
     const [form] = FormStyled.useForm<LoginPayload>();
     const handleFormSubmit = (values: any) => {
-        console.log('Received values of form: ', values);
         authStore?.loginUser(values);
     };
 
@@ -49,21 +48,35 @@ export const Login = observer(() => {
                     <StyledFormContent>
                         <StyledFormItem
                             name="email"
-                            rules={[{ required: true, message: 'Пожалуйста, введите email!' }]}
+                            rules={[
+                                { required: true, message: 'Пожалуйста, введите email!' },
+                            ]}
                         >
-                            <Input size={'large'} prefix={<MailOutlined />} type="email" placeholder="Email" />
+                            <Input size={'large'} prefix={<MailOutlined />} type="email" placeholder="Email"/>
                         </StyledFormItem>
                         <StyledFormItem
                             name="password"
-                            rules={[{ required: true, message: 'Пожалуйста, введите пароль!' }]}
+                            rules={[
+                                { required: true, message: 'Пожалуйста, введите пароль!' },
+                            ]}
                         >
                             <Input
                                 size={'large'}
                                 prefix={<LockOutlined />}
                                 type="password"
                                 placeholder="Пароль"
+                                autoComplete="new-password"
                             />
                         </StyledFormItem>
+                        {
+                            authStore?.loginError && (
+                                <StyledErrorWrapper>
+                                    <Typography.Text type={'danger'}>
+                                        {authStore?.loginError}
+                                    </Typography.Text>
+                                </StyledErrorWrapper>
+                            )
+                        }
                         <StyledFormSubmitButton>
                             <Button size={'large'} type="primary" htmlType="submit">
                                 Войти

@@ -11,7 +11,7 @@ import {GroupsService} from "../../api/services/GroupsService/GroupsService";
 import {Course, Group} from "../StudentsStore/StudentsStore.types";
 import {UserInfo} from "../../api/services/AuthService/AuthService.types";
 import {AuthService} from "../../api/services/AuthService/AuthService";
-import {th} from "date-fns/locale";
+import {RoleVariant} from "../AuthStore/AuthStore.types";
 
 export class UserManagementStore {
     constructor() {
@@ -58,11 +58,17 @@ export class UserManagementStore {
             if (this.managementMode === ManagementMode.UpdateUser) {
                 yield this.usersService.updateUser({
                     ...payload,
+                    courseId: payload?.role === RoleVariant.Student ? payload?.courseId : '',
+                    groupId: payload?.role === RoleVariant.Student ? payload?.groupId : '',
                     currentUserUID: this.userUID ?? '',
                 });
             }
             if (this.managementMode === ManagementMode.CreateUser) {
-                yield this.authService.register(payload);
+                yield this.authService.register({
+                    ...payload,
+                    courseId: payload?.role === RoleVariant.Student ? payload?.courseId : '',
+                    groupId: payload?.role === RoleVariant.Student ? payload?.groupId : '',
+                });
             }
             this.userUID = null;
             this.currentUserUID = null;
@@ -76,6 +82,15 @@ export class UserManagementStore {
 
     public setCurrentUserUID(userUID: string) {
         this.currentUserUID = userUID;
+    }
+
+    public clearAll() {
+        this.userUID = null;
+        this.currentUserUID = null;
+        this.courses = null;
+        this.groups = null;
+        this.userInfo = null;
+        this.managementMode = ManagementMode.CheckUID;
     }
 
 }

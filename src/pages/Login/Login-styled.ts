@@ -64,3 +64,7 @@ export const StyledTitleWrapper = styled.div`
 export const StyledDivider = styled(Divider)`
     margin: 15px 15px 30px 15px !important;
 `
+
+export const StyledErrorWrapper = styled.div`
+    margin-bottom: 30px;
+`

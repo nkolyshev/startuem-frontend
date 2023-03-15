@@ -43,12 +43,11 @@ export const StudentsTable = observer(() => {
     }, [studentsStore?.fetchStudentsByGroup, studentsStore?.lesson]);
 
     useEffect(() => {
-        eventsStore?.connectCardListener();
-    }, [eventsStore?.connectCardListener]);
+        eventsStore?.connectCardListener(studentsStore?.readerUID ?? '');
+    }, [eventsStore?.connectCardListener, studentsStore?.readerUID]);
 
     useEffect(() => {
         eventsStore?.subscribeStudentUIDs((uid) => {
-            console.warn('[UID]', uid);
             studentsStore?.addStudentToLesson(uid);
         })
     }, [eventsStore?.subscribeStudentUIDs])

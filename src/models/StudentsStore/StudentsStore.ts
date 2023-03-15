@@ -8,6 +8,7 @@ import {LessonsService} from "../../api/services/LessonsService/LessonsService";
 import {CreateLessonPayload} from "../../api/services/LessonsService/LessonsService.types";
 
 export interface StudentsFormValues {
+    readerUID: string;
     course: string;
     group: string;
     subject: string;
@@ -37,6 +38,7 @@ export class StudentsStore {
         })
     }
 
+    public readerUID: string | null = null;
     public courses: Course[] | null = null;
     public groups: Group[] | null = null;
     public subjects: Subject[] | null = null;
@@ -65,7 +67,8 @@ export class StudentsStore {
         });
     })
 
-    createLesson = flow(function* (this: StudentsStore, payload: CreateLessonPayload) {
+    createLesson = flow(function* (this: StudentsStore, { readerUID, ...payload }: CreateLessonPayload & { readerUID: string }) {
+        this.readerUID = readerUID;
         this.lesson = yield this.lessonsService.createLesson(payload);
     })
 
@@ -90,6 +93,7 @@ export class StudentsStore {
     })
 
     public clearStudents() {
+        this.readerUID = null;
         this.students = null;
         this.studentsByGroup = null;
         this.lesson = null;

@@ -8,21 +8,13 @@ import {useNavigate} from "react-router-dom";
 import {PagePath} from "../../routing/page-path";
 import fetchIntercept from 'fetch-intercept';
 import {HttpStatusCode} from "axios";
+import {Spin} from "antd";
+import {SpinnerWrapper} from "./Root-styled";
 
 export const Root = observer(() => {
 
     const authStore = useAuthStore();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        console.group('Login data');
-        console.log('uid', authStore?.uid);
-        console.log('role', authStore?.role);
-        console.log('token', authStore?.accessToken);
-        console.log('isUserAuth', authStore?.isUserAuth);
-        console.log('fio', authStore?.fio);
-        console.groupEnd();
-    }, [authStore?.isUserAuth, authStore?.uid, authStore?.accessToken, authStore?.isUserAuth, authStore?.role, authStore?.isUserAuth, authStore?.fio]);
 
     useEffect(() => {
         if (!authStore?.isUserAuth && authStore?.isAccessTokenChecked && authStore?.isRefreshTokenChecked) {
@@ -54,7 +46,13 @@ export const Root = observer(() => {
         <div>
             <Header/>
             <main>
-                <RootRouter/>
+                {
+                    (authStore?.isAccessTokenLoading || authStore?.isRefreshTokenLoading) ? (
+                        <SpinnerWrapper>
+                            <Spin tip="Загрузка" size="large"/>
+                        </SpinnerWrapper>
+                    ) : <RootRouter/>
+                }
             </main>
             <Footer/>
         </div>

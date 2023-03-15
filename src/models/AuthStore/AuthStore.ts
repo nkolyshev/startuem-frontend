@@ -19,6 +19,8 @@ export class AuthStore {
         })
     }
 
+    public isAccessTokenLoading: boolean = false;
+    public isRefreshTokenLoading: boolean = false;
     public isUserAuth: boolean = false;
     public isAccessTokenChecked: boolean = false;
     public isRefreshTokenChecked: boolean = false;
@@ -30,6 +32,7 @@ export class AuthStore {
     public course: Course | null = null;
     public accessToken: string | null;
     public error: string | null = null;
+    public loginError: string | null = null;
     private authService: AuthService | null = null;
 
     loginUser = flow(function* (this: AuthStore, payload: LoginPayload){
@@ -44,14 +47,17 @@ export class AuthStore {
             this.course = course;
             this.isUserAuth = true;
             this.accessToken = accessToken;
+            this.loginError = null;
         } catch (error) {
-            this.error = "error"
+            this.loginError = 'Неверный email или пароль!';
         }
     })
 
     validateAccessToken = flow(function* (this: AuthStore){
         try {
+            this.isAccessTokenLoading = true;
             const result: LoginResponse = yield this?.authService?.validateToken();
+            this.isAccessTokenLoading = false;
             const { user: { role, uid, fio, email, group, course }, accessToken } = result;
             this.uid = uid;
             this.role = role;
@@ -63,6 +69,7 @@ export class AuthStore {
             this.isUserAuth = true;
             this.accessToken = accessToken;
         } catch (error) {
+            this.isAccessTokenLoading = false;
             this.isAccessTokenChecked = true;
             this.error = "error"
         }
@@ -70,7 +77,9 @@ export class AuthStore {
 
     validateRefreshToken = flow(function* (this: AuthStore){
         try {
+            this.isRefreshTokenLoading = true;
             const result: LoginResponse = yield this?.authService?.refreshToken();
+            this.isRefreshTokenLoading = false;
             const { user: { role, uid, fio, email, group, course }, accessToken } = result;
             this.uid = uid;
             this.role = role;
@@ -83,6 +92,7 @@ export class AuthStore {
             this.isUserAuth = true;
             this.accessToken = accessToken;
         } catch (error) {
+            this.isRefreshTokenLoading = false;
             this.isAccessTokenChecked = true;
             this.isRefreshTokenChecked = true;
             this.error = "error"
@@ -98,6 +108,8 @@ export class AuthStore {
         this.role = null;
         this.fio = null;
         this.email = null;
+        this.error = null;
+        this.loginError = null;
         this.isAccessTokenChecked = false;
         this.isRefreshTokenChecked = false;
     })

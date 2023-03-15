@@ -1,4 +1,4 @@
-import {Button, Divider, Form, Select} from "antd";
+import {Button, Divider, Form, Input, Select} from "antd";
 import {useCallback, useEffect, useMemo} from "react";
 import {observer} from "mobx-react-lite";
 import {useStudentsStore} from "../Students.context";
@@ -17,6 +17,7 @@ export const StudentsFormCreate = observer(() => {
             groupId: values.group,
             courseId: values.course,
             subjectId: values.subject,
+            readerUID: values.readerUID,
         });
     }, [authStore?.uid]);
 
@@ -95,6 +96,18 @@ export const StudentsFormCreate = observer(() => {
     }, [groupId]);
     return (
         <Form onFinish={onFinish} form={form}>
+            <Form.Item
+                label='UID считывателя'
+                name='readerUID'
+                rules={[
+                    {
+                        required: true,
+                        message: 'Введите UID считывателя!'
+                    }
+                ]}
+            >
+                <Input size={'large'}/>
+            </Form.Item>
             <Form.Item
                 label='Курс'
                 name='course'

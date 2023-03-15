@@ -4,9 +4,8 @@ import {apiMethod} from './decorators/apiMethod';
 
 export class Api {
 
-    private readonly baseUrl3 = 'http://localhost:5555/';
+    private readonly baseUrl = 'http://localhost:5555/';
     private readonly baseUrl2 = 'https://startuem-backend.vercel.app/';
-    private readonly baseUrl = '/api/';
 
     constructor() {}
 

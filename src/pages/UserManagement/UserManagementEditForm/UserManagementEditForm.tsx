@@ -19,6 +19,8 @@ export const UserManagementEditForm = observer(() => {
 
     const [form] = useForm();
 
+    const roleFormValue: string = Form.useWatch('role', form);
+
     const onFinish = useCallback((values: EditUserPayload) => {
         userManagementStore?.editUser(values);
     }, [userManagementStore?.editUser]);
@@ -73,7 +75,7 @@ export const UserManagementEditForm = observer(() => {
             courseId: userManagementStore?.userInfo?.course?.id ?? null,
             groupId: userManagementStore?.userInfo?.group?.id ?? null,
         }
-    }, [userManagementStore?.userInfo, userManagementStore?.userUID])
+    }, [userManagementStore?.userInfo, userManagementStore?.userUID]);
 
     return (
         <Form onFinish={onFinish} form={form} initialValues={formInitialValues}>
@@ -160,7 +162,7 @@ export const UserManagementEditForm = observer(() => {
                     }
                 ]}
             >
-                <Select size={'large'}>
+                <Select size={'large'} disabled={roleFormValue === RoleVariant.Teacher}>
                     {coursesSelectValues}
                 </Select>
             </Form.Item>
@@ -174,7 +176,7 @@ export const UserManagementEditForm = observer(() => {
                     }
                 ]}
             >
-                <Select disabled={isGroupsSelectDisabled} size={'large'}>
+                <Select disabled={isGroupsSelectDisabled || roleFormValue === RoleVariant.Teacher} size={'large'}>
                     {groupsSelectValues}
                 </Select>
             </Form.Item>

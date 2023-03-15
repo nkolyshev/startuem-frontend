@@ -9,8 +9,8 @@ interface LogoProps {
 
 export const Logo: React.FC<LogoProps> = ({roleName}) => {
     return (
-        <StyledLogoWrapper>
-            <StyledLogo to={PagePath.home}>Cтартуем!</StyledLogo>
+        <StyledLogoWrapper to={PagePath.home}>
+            <StyledLogo>Cтартуем!</StyledLogo>
             {
                 roleName && (
                     <StyledLogoRole>

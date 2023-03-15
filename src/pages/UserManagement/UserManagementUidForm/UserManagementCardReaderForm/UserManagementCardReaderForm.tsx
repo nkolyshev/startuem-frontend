@@ -14,8 +14,7 @@ export const UserManagementCardReaderForm = observer(() => {
     const eventsStore = useEventsStore();
 
     const onFinish = useCallback((values: {cardReaderUID: string}) => {
-        eventsStore?.connectCardListener(values.cardReaderUID);
-        eventsStore?.subscribeStudentUIDs(uid => {
+        eventsStore?.connectCardListener(values.cardReaderUID, uid => {
             userManagementStore?.setCurrentUserUID(uid);
         });
     }, [eventsStore?.connectCardListener]);

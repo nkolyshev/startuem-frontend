@@ -1,5 +1,6 @@
 import {flow, makeAutoObservable} from "mobx";
 import {EventsService} from "../../api/services/EventsService/EventsService";
+import {Channel} from "pusher-js";
 
 export class EventsStore {
     constructor() {
@@ -8,11 +9,8 @@ export class EventsStore {
 
     public eventsService = new EventsService();
 
-    connectCardListener = flow(function* (this: EventsStore, cardListenerId: string) {
-        yield this.eventsService.cardListenerJoin(cardListenerId);
-    });
-
-    subscribeStudentUIDs = flow(function* (this: EventsStore, callback: (uid: string) => void) {
-        yield this.eventsService.socket.on('CARD_LISTENER:NEW_USER_ID', callback)
+    connectCardListener = flow(function* (this: EventsStore, cardListenerId: string, callback: (uid: string) => void) {
+        const channel = yield this.eventsService.cardListenerJoin(cardListenerId);
+        yield channel?.bind(`push_UID`, callback);
     });
 }

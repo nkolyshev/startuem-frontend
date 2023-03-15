@@ -1,9 +1,15 @@
-import {SocketApi} from '../../SocketApi';
+import Pusher from 'pusher-js';
 
-export class EventsService extends SocketApi {
+export class EventsService {
 
     async cardListenerJoin(cardListenerId: string) {
-        this.socket.emit('CARD_LISTENER:JOIN', cardListenerId);
+
+        const pusher = new Pusher('cab2f8ec3d436dfc8411', {
+            cluster: 'eu',
+            forceTLS: true,
+        });
+
+        return pusher.subscribe(`card_listener_${cardListenerId}`);
     }
 
 }

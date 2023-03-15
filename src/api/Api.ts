@@ -6,7 +6,7 @@ export class Api {
 
     private readonly baseUrl2 = 'http://localhost:5555/';
     private readonly baseUrl3 = 'https://startuem-backend.vercel.app/';
-    private readonly baseUrl = '';
+    private readonly baseUrl = '/api/';
 
 
     constructor() {}

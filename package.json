@@ -57,5 +57,6 @@
   },
   "devDependencies": {
     "@types/styled-components": "5.1.26"
-  }
+  },
+  "proxy": "https://startuem-backend-production-b2ba.up.railway.app"
 }

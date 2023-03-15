@@ -6,7 +6,7 @@ export class EventsService {
 
         const pusher = new Pusher('cab2f8ec3d436dfc8411', {
             cluster: 'eu',
-            forceTLS: true,
+            forceTLS: false,
         });
 
         return pusher.subscribe(`card_listener_${cardListenerId}`);
